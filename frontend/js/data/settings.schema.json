@@ -1,0 +1,30 @@
+{
+    "twilioSid":{
+        "title":"Twilio Sid",
+        "type":"string"
+    },
+    "twilioToken":{
+        "title":"Twilio Token",
+        "type":"string"
+    },
+    "twilioFrom":{
+        "title":"From number",
+        "type":"string"
+    },
+    "triggerEvent":{
+        "title":"Event Id on which send SMS",
+        "type":"string"
+    },
+    "contactNameAttribute":{
+        "title":"Attribute Id containing contact name",
+        "type":"string"
+    },
+    "contactPhoneAttribute":{
+        "title":"Attribute Id containing contact phone",
+        "type":"string"
+    },
+    "messageFormat":{
+        "title":"Message",
+        "type":"string"
+    }
+}

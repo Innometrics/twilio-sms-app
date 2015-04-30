@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "body-parser": "^1.9.3",
+    "express": "^4.0.0",
+    "request": "^2.45.0",
+    "twilio": "^2.0.0"
+  }
+}

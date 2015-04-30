@@ -1,0 +1,14 @@
+{
+    "version_name": "twilio-sms-demo",
+    "version_description": "",
+    "pages": [{
+        "name": "Settings",
+        "type": "bundled",
+        "content": "frontend/settings.html"
+    }],
+    "permissions": ["stream", "profile.read", "profile.update", "app.read.own"],
+    "runtime": {
+        "language": "node",
+        "version": "0.10"
+    }
+}
