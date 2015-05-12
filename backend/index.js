@@ -1,4 +1,4 @@
-var InnoHelper  = require('node-inno-helper'),
+var InnoHelper  = require('innometrics-helper'),
     bodyParser  = require('body-parser'),
     express     = require('express'),
     util        = require('util'),
@@ -13,13 +13,13 @@ var app = express();
 
 
 var config = {
-    groupId: 208,
-    bucketName: 'egor',
-    appKey: 'kONrO2eC8kg246i3',
-    apiUrl: 'https://staging.innomdc.com',
-    appName: 'egor-test_twilio-sms'
+    groupId: process.env.INNO_COMPANY_ID,
+    bucketName: process.env.INNO_BUCKET_ID,
+    appName: process.env.INNO_APP_ID,
+    appKey: process.env.INNO_APP_KEY,
+    apiUrl: process.env.INNO_API_HOST,
+    noCache: true
 };
-
 
 var inno    = new InnoHelper(config);
 var tclient = null;
@@ -113,8 +113,8 @@ var getUserDetails = function(opts, callback) {
 
             if (attributes.length) {
                 user = {
-                    name: attributes[0],
-                    phone: attributes[0]
+                    name: attributes[0].data[opts.nameAttr],
+                    phone: attributes[0].data[opts.phoneAttr]
                 };
             } else {
                 err = new Error('User not found');
