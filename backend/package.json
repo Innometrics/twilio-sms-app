@@ -1,21 +1,10 @@
 {
-  "name": "twilio-app",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "private": true,
   "dependencies": {
     "body-parser": "^1.9.3",
     "express": "^4.0.0",
     "innometrics-helper": "0.0.4",
     "request": "^2.45.0",
     "twilio": "^2.0.0"
-  },
-  "scripts": {
-    "start": "node index.js"
-  },
-  "engines": {
-    "node": "0.10.x"
   }
 }
  

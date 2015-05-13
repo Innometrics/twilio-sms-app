@@ -13,11 +13,11 @@ var app = express();
 
 
 var config = {
-    groupId: '208',
-    bucketName: 'egor',
-    appName: 'egor-test_twilio-sms',
-    appKey: '7OyW60ueA9sn8TTn',
-    apiUrl: 'http://staging.innomdc.com',
+    groupId: process.env.INNO_COMPANY_ID,
+    bucketName: process.env.INNO_BUCKET_ID,
+    appName: process.env.INNO_APP_ID,
+    appKey: process.env.INNO_APP_KEY,
+    apiUrl: process.env.INNO_API_HOST,
     noCache: true
 };
 
@@ -26,18 +26,24 @@ var tclient = null;
 
 
 app.post('/', function(req) {
+
     getSettings(function(err, settings){
         if (err) { throw err; }
+
         inno.getProfile(req.body, function(err, data){
             if (err) { throw err; }
+
             if (settings.triggerEvent === data.event.definitionId) {
                 sendSms(settings, data, function(err, message){
                     if (err) { throw err; }
                     console.log("Message was send to " + message.to + ", status: " + message.status + ", text: " + message.body);
                 });
             }
+
         });
+
     });
+
 });
 
 var sendSms = function(settings, data, callback) {
