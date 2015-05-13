@@ -120,6 +120,6 @@ var getUserDetails = function(opts, callback) {
 };
 
 
-var server = app.listen(3333, function () {
+var server = app.listen(process.env.PORT, function () {
     console.log('Listening on port %d', server.address().port);
 });
