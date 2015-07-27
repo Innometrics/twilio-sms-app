@@ -29,6 +29,9 @@ var errors = [],
 
 function logError (error) {
     console.error(error);
+    if (error.stack) {
+        console.log(error.stack);
+    }
     errors.push({
         date: new Date(),
         error: error
@@ -70,7 +73,7 @@ app.post('/', function (req, res) {
         if (err) {
             logError(err);
             return res.status(500).json({
-                error: err
+                error: err.message
             });
         }
 
@@ -86,7 +89,7 @@ app.post('/', function (req, res) {
                     if (err) {
                         logError(err);
                         return res.status(500).json({
-                            error: err
+                            error: err.message
                         });
                     }
                     var msg = util.format(
