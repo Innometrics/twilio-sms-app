@@ -15,7 +15,6 @@ var vars = {
 };
 
 var innoHelper = new inno.InnoHelper(vars),
-    twilioClient,
     app;
 
 app = express();
@@ -29,7 +28,7 @@ var errors = [],
     errorsLimit = 20;
 
 function logError (error) {
-    console.error();
+    console.error(error);
     errors.push({
         date: new Date(),
         error: error
@@ -113,7 +112,7 @@ app.post('/', function (req, res) {
 var sendSms = function (settings, data, callback) {
 
     // init twilio client
-    twilioClient = new twilio(settings.twilioSid, settings.twilioToken);
+    var twilioClient = new twilio(settings.twilioSid, settings.twilioToken);
 
     // get user data
     getUserDetails({
