@@ -37,12 +37,17 @@ function logError (error) {
     errors = errors.slice(-1 * errorsLimit);
 }
 
+app.get('/', function (req, res) {
+    var data = 'I am Twilio SMS Application (https://github.com/Innometrics/twilio-sms-app)';
+    res.send(data);
+});
+
 app.get('/errors', function (req, res) {
     var data = errors.map(function (record) {
         return util.format('%s: %s', record.date, record.error);
     }).join('\n\n');
 
-    res.send(data);
+    res.send(data || 'No errors');
 });
 
 /**
