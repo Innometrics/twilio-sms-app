@@ -177,7 +177,7 @@ var getUserDetails = function (opts, callback) {
 
         if (!error) {
             user = {};
-            attributes = profile.getAttributes(opts.nameAttr);
+            attributes = profile.getAttributes();
             attributes.forEach(function (attribute) {
                 if (!user.name && attribute.getName() === opts.nameAttr && attribute.getValue()) {
                     user.name = attribute.getValue();
