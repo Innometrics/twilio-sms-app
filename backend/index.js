@@ -70,7 +70,9 @@ app.post('/', function (req, res) {
 
         if (err) {
             logError(err);
-            return res.status(500).send(err);
+            return res.status(500).json({
+                error: err
+            });
         }
 
         session = profile.getLastSession();
@@ -84,7 +86,9 @@ app.post('/', function (req, res) {
                 }, function (err, message) {
                     if (err) {
                         logError(err);
-                        return res.status(500).send(err);
+                        return res.status(500).json({
+                            error: err
+                        });
                     }
                     var msg = util.format(
                         "Message was send to %s, status: %s, text: %s",
@@ -93,7 +97,10 @@ app.post('/', function (req, res) {
                         message.body
                     );
                     console.log(msg);
-                    res.send(msg);
+                    return res.json({
+                        error: null,
+                        result: msg
+                    });
                 });
             }
 
