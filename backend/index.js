@@ -4,24 +4,26 @@ var bodyParser  = require('body-parser'),
     inno = require('innometrics-helper'),
     twilio      = require('twilio');
 
-var app = express();
+var env = process.env;
+
+var vars = {
+    bucketName: env.INNO_BUCKET_ID,
+    appKey:     env.INNO_APP_KEY,
+    apiUrl:     env.INNO_API_HOST,
+    appName:    env.INNO_APP_ID,
+    groupId:    env.INNO_COMPANY_ID
+};
+
+var innoHelper = new inno.InnoHelper(vars),
+    twilioClient,
+    app;
+
+app = express();
 app.use(bodyParser.json());
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     next();
 });
-
-var vars = {
-    bucketName: process.env.INNO_BUCKET_ID,
-    appKey: process.env.INNO_APP_KEY,
-    apiUrl: process.env.INNO_API_HOST,
-    appName: process.env.INNO_APP_ID,
-    groupId: process.env.INNO_COMPANY_ID
-};
-
-var innoHelper = new inno.InnoHelper(vars);
-
-var tclient = null;
 
 var errors = [],
     errorsLimit = 20;
@@ -43,21 +45,27 @@ app.get('/errors', function (req, res) {
     res.send(data);
 });
 
-app.post('/', function (req) {
+/**
+ * Handle request form DH (with ProfileStream data)
+ */
+app.post('/', function (req, res) {
 
     getSettings(function (err, settings) {
         var profile,
             session,
             event;
 
-        if (err) {
-            return logError(err);
+        if (!err) {
+            try {
+                profile = innoHelper.getProfileFromRequest(req.body);
+            } catch (e) {
+                err = e;
+            }
         }
 
-        try {
-            profile = innoHelper.getProfileFromRequest(req.body);
-        } catch (e) {
-            return logError(e);
+        if (err) {
+            logError(err);
+            return res.status(500).send(err);
         }
 
         session = profile.getLastSession();
@@ -70,14 +78,17 @@ app.post('/', function (req) {
                     section: session.getSession()
                 }, function (err, message) {
                     if (err) {
-                        return logError(err);
+                        logError(err);
+                        return res.status(500).send(err);
                     }
-                    console.log(util.format(
+                    var msg = util.format(
                         "Message was send to %s, status: %s, text: %s",
                         message.to,
                         message.status,
                         message.body
-                    ));
+                    );
+                    console.log(msg);
+                    res.send(msg);
                 });
             }
 
@@ -90,7 +101,7 @@ app.post('/', function (req) {
 var sendSms = function (settings, data, callback) {
 
     // init twilio client
-    tclient = new twilio(settings.twilioSid, settings.twilioToken);
+    twilioClient = new twilio(settings.twilioSid, settings.twilioToken);
 
     // get user data
     getUserDetails({
@@ -109,7 +120,7 @@ var sendSms = function (settings, data, callback) {
             to: user.phone
         };
 
-        tclient.messages.create(message, function (err, message) {
+        twilioClient.messages.create(message, function (err, message) {
 
             if (err) {
                 err = new Error(err.message);
