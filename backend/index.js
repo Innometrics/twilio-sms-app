@@ -189,9 +189,10 @@ var getUserDetails = function (opts, callback) {
                 }
             });
 
-            if (!user.name || !user.phone) {
-                error = new Error('User not found');
-                user = null;
+            if (!user.name) {
+                error = new Error(util.form('Attribute (with user\'s name) "$s" not found in profile %s', opts.nameAttr, opts.profileId));
+            } else if (!user.phone) {
+                error = new Error(util.form('Attribute (with user\'s phone) "$s" not found in profile %s', opts.phoneAttr, opts.profileId));
             }
         }
 
