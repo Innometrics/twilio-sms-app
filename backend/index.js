@@ -23,6 +23,25 @@ var innoHelper = new inno.InnoHelper(vars);
 
 var tclient = null;
 
+var errors = [],
+    errorsLimit = 20;
+
+function logError (error) {
+    console.error();
+    errors.push({
+        date: new Date(),
+        error: error
+    });
+    errors = errors.slice(-1 * errorsLimit);
+}
+
+app.get('/errors', function (req, res) {
+    var data = errors.map(function (record) {
+        return util.format('%s: %s', record.date, record.error);
+    }).join('\n\n');
+
+    res.send(data);
+});
 
 app.post('/', function (req) {
 
@@ -32,13 +51,13 @@ app.post('/', function (req) {
             event;
 
         if (err) {
-            throw err;
+            return logError(err);
         }
 
         try {
             profile = innoHelper.getProfileFromRequest(req.body);
         } catch (e) {
-            throw e;
+            return logError(e);
         }
 
         session = profile.getLastSession();
@@ -51,7 +70,7 @@ app.post('/', function (req) {
                     section: session.getSession()
                 }, function (err, message) {
                     if (err) {
-                        throw err;
+                        return logError(err);
                     }
                     console.log(util.format(
                         "Message was send to %s, status: %s, text: %s",
@@ -81,7 +100,7 @@ var sendSms = function (settings, data, callback) {
         phoneAttr:  settings.contactPhoneAttribute
     }, function (err, user) {
         if (err) {
-            throw err;
+            return callback(err);
         }
 
         var message = {
