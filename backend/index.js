@@ -84,7 +84,7 @@ app.post('/', function (req, res) {
             if (event && settings.triggerEvent === event.getDefinitionId()) {
                 sendSms(settings, {
                     profileId: profile.getId(),
-                    section: session.getSession()
+                    section: session.getSection()
                 }, function (err, message) {
                     if (err) {
                         logError(err);
