@@ -27,6 +27,8 @@ app.use(function (req, res, next) {
 var errors = [],
     errorsLimit = 20;
 
+var requests = [];
+
 function logError (error) {
     console.error(error);
     if (error.stack) {
@@ -50,6 +52,14 @@ app.get('/errors', function (req, res) {
     }).join('\n\n');
 
     res.send(data || 'No errors');
+});
+
+app.get('/requests', function (req, res) {
+    var data = requests.map(function (record) {
+        return util.format('%s: %s', record.date, record.body);
+    }).join('\n\n');
+
+    res.send(data || 'No requests');
 });
 
 /**
@@ -76,6 +86,11 @@ app.post('/', function (req, res) {
                 error: err.message
             });
         }
+
+        requests.push({
+            date: new Date(),
+            body: JSON.stringify(req.body)
+        });
 
         session = profile.getLastSession();
         if (session) {
@@ -104,9 +119,15 @@ app.post('/', function (req, res) {
                         result: msg
                     });
                 });
+                return;
             }
 
         }
+
+        res.json({
+            error: null,
+            result: 'NOP' // nothing to do, there is no our target event
+        });
 
     });
 
