@@ -1,13 +1,13 @@
 {
   "name": "twilio-app",
-  "version": "0.0.1",
-  "description": "some",
+  "version": "0.0.2",
+  "description": "",
   "main": "index.js",
   "private": true,
   "dependencies": {
     "body-parser": "^1.9.3",
     "express": "^4.0.0",
-    "innometrics-helper": "0.0.4",
+    "innometrics-helper": "^0.0.7",
     "request": "^2.45.0",
     "twilio": "^2.0.0"
   },
